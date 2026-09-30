@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DuoQuest"><meta name="theme-color" content="#0a0612">
+<title>DuoQuest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0612;--s:#150d24;--s2:#1c1230;--p:#8b5cf6;--p2:#b7a3e6;--t:#f3eefc;--mu:#8f83a8;--ok:#6fbf9f;--bad:#d9668a;--ln:#ffffff1a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0}
+html,body{height:100%;background:var(--bg);color:var(--t);font:15px/1.4 Inter,system-ui,sans-serif;overscroll-behavior:none}
+h1,h2,.d{font-family:Rajdhani,Inter,sans-serif;font-weight:600;letter-spacing:.3px}
+#app{height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+main{flex:1;overflow-y:auto;padding:14px 14px 160px;-webkit-overflow-scrolling:touch}
+main.in{animation:fi .3s}@keyframes fi{from{opacity:0;transform:translateY(6px)}}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#0a0612f2;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:500 10px Inter;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+nav button.on{color:var(--p2)}
+.fab{position:fixed;right:16px;bottom:calc(74px + env(safe-area-inset-bottom));width:54px;height:54px;border-radius:50%;border:0;font-size:28px;font-weight:300;color:#fff;background:var(--p);box-shadow:0 6px 18px #0009;z-index:11}
+.card{background:var(--s);border:1px solid var(--ln);border-radius:16px;padding:16px;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mu,small{color:var(--mu);font-size:12px}
+h2{font-size:17px;margin:22px 2px 8px;color:var(--p2)}
+.big{font-size:58px;font-weight:600;line-height:1}
+.tag{padding:3px 12px;border-radius:12px;font:600 12px Inter;color:#0a0612}
+.bar{height:6px;border-radius:6px;background:#2a1f3f;overflow:hidden;margin:12px 0 8px}
+.bar i{display:block;height:100%;border-radius:6px;background:var(--p);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.flt{display:flex;gap:8px;overflow-x:auto;margin:4px 0 6px;padding-bottom:4px}
+.chip{min-height:44px;padding:0 16px;border-radius:22px;border:1px solid var(--ln);background:transparent;color:var(--mu);font:500 14px Inter;white-space:nowrap}
+.chip.on{background:#241a3d;border-color:var(--p);color:var(--t)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}
+.task{display:flex;gap:10px;align-items:center;background:var(--s);border:1px solid var(--ln);border-left:3px solid var(--c);border-radius:14px;padding:8px;margin-bottom:8px}
+.task.a{border-left-color:var(--bad)}
+.task.f .tb b{text-decoration:line-through;opacity:.5}
+.tb{flex:1;min-width:0}.tb b{display:block;font-weight:500}.tb em{color:var(--bad);font-style:normal;font-weight:500}
+.ck{width:44px;height:44px;flex:none;border-radius:12px;border:1.5px solid #ffffff40;background:none;color:#fff;font-size:20px}
+.f .ck{background:var(--p);border-color:var(--p)}
+.x,.mini{width:44px;height:44px;flex:none;background:none;border:0;font-size:24px;font-weight:300;color:var(--mu)}
+.mini{border:1px solid var(--ln);border-radius:12px;color:var(--t)}
+input,textarea,select{width:100%;min-height:44px;background:var(--bg);border:1px solid var(--ln);border-radius:12px;color:var(--t);padding:10px;font:16px Inter;margin:4px 0 10px}
+.btn{width:100%;min-height:48px;border:0;border-radius:12px;color:#fff;font:600 15px Inter;background:var(--p);margin-top:6px}
+.btn.g{background:transparent;border:1px solid var(--ln);color:var(--t)}
+.btns{display:flex;gap:8px}
+#sheet{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;z-index:30}#sheet.on{display:flex}
+.sh{background:var(--s);width:100%;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90%;overflow:auto;animation:up .25s}
+@keyframes up{from{transform:translateY(100%)}}
+.cf{position:fixed;width:7px;height:10px;top:50%;left:50%;z-index:50;pointer-events:none;animation:cf 1s forwards}
+@keyframes cf{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}
+#sp{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
+#sp h1{font-size:34px;letter-spacing:6px}
+.bg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.b{padding:12px;border-radius:12px;background:var(--s);border:1px solid var(--ln);font-size:13px}.b.off{opacity:.35}
+.b span{font-size:12px;display:block;color:var(--p2);margin-bottom:4px}
+.duel{display:flex;height:8px;border-radius:6px;overflow:hidden;margin:10px 0}.duel i{transition:width .8s}
+.msg{padding:12px 14px;border-radius:12px;background:var(--s2);margin:8px 0;font-weight:500}
+.rr{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--ln)}
+</style></head><body>
+<div id="sp"><h1 class="d">DUOQUEST</h1><small>Benevides × Clark</small></div>
+<div id="app"><main id="main"></main></div>
+<button class="fab" data-a="fab" aria-label="Adicionar">+</button>
+<nav id="nav"></nav><div id="sheet"></div>
+<input type="file" id="imp" accept="application/json" hidden>
+<script>
+/* ===== CONFIG (ajuste aqui) ===== */
+const CFG={xp:{l:10,m:20,h:30},late:.5,perfect:25,goalXp:100,penCap:30,penEach:5,penDay:1,onTime:10,
+levels:[[0,'Recruta'],[100,'Operador'],[250,'Estrategista'],[500,'Mestre'],[900,'Lenda']],
+bands:[[90,'Elite','#c9a6e8'],[70,'Forte','#6fbf9f'],[40,'Em ritmo','#9d86e0'],[0,'Crítico','#d9668a']]};
+const P={B:{n:'Benevides',c:'#7fb2c9',i:''},C:{n:'Clark',c:'#d1a15f',i:''},A:{n:'Ambos',c:'#a78bdb',i:''}};
+const DS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+/* ===== STORAGE (camada isolada: troque por Firebase/Supabase aqui) ===== */
+const Store={k:'duoquest.v1',load(){try{return JSON.parse(localStorage.getItem(this.k))}catch(e){return null}},save(s){try{localStorage.setItem(this.k,JSON.stringify(s))}catch(e){}}};
+/* ===== DATAS ===== */
+const $=s=>document.querySelector(s),p2=n=>String(n).padStart(2,'0'),uid=()=>Math.random().toString(36).slice(2,9);
+const ymd=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()),parse=s=>new Date(s+'T00:00:00');
+const td=()=>ymd(new Date()),add=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return ymd(d)};
+const diff=(a,b)=>Math.round((parse(a)-parse(b))/864e5),br=d=>d.slice(8)+'/'+d.slice(5,7);
+const ws=(d=td())=>add(d,-((parse(d).getDay()+6)%7)),esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ===== ESTADO ===== */
+let S=Store.load()||seed();const UI={tab:'hoje',f:'T',rep:'d',rd:td()};
+function seed(){const t=td(),mk=(n,who,o,pri,dn,rec)=>({id:uid(),t:n,d:'',who,pri,due:add(t,o),seed:1,rec:rec||{type:'none'},sid:rec?uid():null,
+done:dn==null?null:{date:add(t,dn),late:dn>o,xp:Math.round(CFG.xp[pri||'m']*(dn>o?CFG.late:1))}});
+return{tasks:[mk('Responder leads do Instagram','B',0,'m',null,{type:'daily'}),mk('Gravar 3 vídeos curtos','C',0,'h'),mk('Revisar funil de vendas','A',0,'m',0),
+mk('Enviar proposta ao cliente','B',-2,'h'),mk('Atualizar página de vendas','C',1,'l'),mk('Configurar pixel de anúncios','B',-1,'m',-1),
+mk('Roteiro do lançamento','C',-1,'h',-1),mk('Postar stories','C',-2,'l',-2),mk('Planejar semana','A',-3,'m',-3)],
+goals:[{id:uid(),t:'Fechar 10 vendas',who:'A',target:10,prog:3,seed:1},{id:uid(),t:'Publicar 30 conteúdos',who:'C',target:30,prog:12,seed:1},{id:uid(),t:'Captar 5 leads qualificados',who:'B',target:5,prog:2,seed:1}]}}
+const save=()=>{Store.save(S)};
+/* ===== REGRAS ===== */
+const st=t=>t.done?'f':t.due<td()?'a':'p';
+const mine=p=>p=='D'?S.tasks:S.tasks.filter(t=>t.who==p||t.who=='A');
+const fl=l=>UI.f=='T'?l:l.filter(t=>t.who==UI.f);
+const dayT=(d,l)=>l.filter(t=>t.due==d||(t.done&&t.done.date==d)||(d==td()&&!t.done&&t.due<d));
+const weekT=(l,w)=>l.filter(t=>t.due>=w&&t.due<=add(w,6));
+function coef(l){const f=l.filter(t=>t.done),o=l.filter(t=>st(t)=='a'),n=l.length,p=n-f.length-o.length;let v=0;
+if(n){const base=f.length/n*100,pen=Math.min(CFG.penCap,o.length*CFG.penEach+o.reduce((s,t)=>s+diff(td(),t.due)*CFG.penDay,0)),
+bon=f.length?f.filter(t=>!t.done.late).length/f.length*CFG.onTime:0;v=Math.max(0,Math.min(100,Math.round(base-pen+bon)))}
+const b=CFG.bands.find(b=>v>=b[0]);return{v,f:f.length,o:o.length,p,n,lb:n?b[1]:'Sem tarefas',c:n?b[2]:'#5d5275'}}
+function perfect(p){const g={};mine(p).filter(t=>t.due<=td()).forEach(t=>{(g[t.due]=g[t.due]||[]).push(t)});return Object.values(g).filter(a=>a.every(t=>t.done)).length}
+const goalDone=g=>g.prog>=g.target;
+function xp(p){if(p=='D')return xp('B')+xp('C');return mine(p).reduce((s,t)=>s+(t.done?t.done.xp:0),0)+perfect(p)*CFG.perfect+S.goals.filter(g=>goalDone(g)&&(g.who==p||g.who=='A')).length*CFG.goalXp}
+const xpR=(p,a,b)=>mine(p).reduce((s,t)=>s+(t.done&&t.done.date>=a&&t.done.date<=b?t.done.xp:0),0);
+function level(x,m=1){const L=CFG.levels;let i=0;L.forEach((l,k)=>{if(x>=l[0]*m)i=k});const cur=L[i][0]*m,nx=L[i+1]?L[i+1][0]*m:null;
+return{name:L[i][1],next:nx,nn:L[i+1]?L[i+1][1]:'',pct:nx?(x-cur)/(nx-cur)*100:100}}
+function streak(p){const s=new Set(mine(p).filter(t=>t.done).map(t=>t.done.date));let d=td();if(!s.has(d))d=add(d,-1);let n=0;while(s.has(d)){n++;d=add(d,-1)}return n}
+function nextD(r,a){for(let i=1;i<400;i++){const d=add(a,i),o=parse(d);if(r.type=='daily')return d;
+if(r.type=='weekly'&&(r.days||[]).includes(o.getDay()))return d;
+if(r.type=='monthly'&&o.getDate()==Math.min(r.day||1,new Date(o.getFullYear(),o.getMonth()+1,0).getDate()))return d}}
+/* gera próxima ocorrência de tarefas recorrentes */
+function ensure(){const g={};S.tasks.forEach(t=>{if(t.sid&&t.rec.type!='none')(g[t.sid]=g[t.sid]||[]).push(t)});
+Object.values(g).forEach(a=>{const L=a.reduce((m,t)=>t.due>m.due?t:m);if(!L.done&&L.due>=td())return;
+const y=add(td(),-1),nd=nextD(L.rec,L.due>y?L.due:y);if(!nd||a.some(t=>t.due==nd))return;S.tasks.push({...L,id:uid(),due:nd,done:null})})}
+function toggle(id){const t=S.tasks.find(x=>x.id==id);if(t.done)t.done=null;else{const late=t.due<td();t.done={date:td(),late,xp:Math.round(CFG.xp[t.pri||'m']*(late?CFG.late:1))};boom()}
+ensure();save();render()}
+/* ===== UI ===== */
+const hero=(c,pv,t)=>{const d=c.v-pv.v;return`<div class="card hero" style="--k:${c.c}"><div class="row"><div><small>${t}</small><div class="big d">${c.v}</div></div><div style="text-align:right"><span class="tag" style="background:${c.c}">${c.lb}</span><div class="mu" style="margin-top:6px">${d>0?'▲ +'+d:d<0?'▼ '+d:'■ 0'} vs anterior</div></div></div><div class="bar"><i style="width:0" data-w="${c.v}"></i></div><div class="mu">${c.f} feitas · ${c.p} pendentes · ${c.o} atrasadas</div></div>`};
+const chips=()=>`<div class="flt">${[['T','Todos'],['B','Benevides'],['C','Clark'],['A','Ambos']].map(x=>`<button class="chip ${UI.f==x[0]?'on':''}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>`;
+const taskH=t=>{const s=st(t),w=P[t.who],late=s=='a'?diff(td(),t.due):0;
+return`<div class="task ${s}" style="--c:${w.c}"><button class="ck" data-a="tg" data-id="${t.id}" aria-label="Concluir">${t.done?'✓':''}</button><div class="tb" data-a="ed" data-id="${t.id}"><b>${esc(t.t)}</b><small>${w.i} ${w.n}${t.pri?' · '+{l:'Baixa',m:'Média',h:'Alta'}[t.pri]:''}${t.rec&&t.rec.type!='none'?' · Recorrente':''}${late?` · <em>${late}d de atraso</em>`:''}${t.done?` · +${t.done.xp} XP`:''}</small></div><button class="x" data-a="del" data-id="${t.id}" aria-label="Excluir">×</button></div>`};
+const sec=(h,l)=>l.length?`<h2 class="d">${h} (${l.length})</h2>`+l.map(taskH).join(''):'';
+function vHoje(){const l=fl(S.tasks),d=dayT(td(),l),c=coef(d),pv=coef(dayT(add(td(),-1),l)),rem=c.p+c.o;
+const m=!c.n?'Sem missões hoje. Toque em + para criar!':rem==0?'Dia perfeito! +'+CFG.perfect+' XP garantidos':rem==1?'Falta 1 para o dia perfeito!':`Faltam ${rem} para o dia perfeito!`+(c.o?' Limpe as atrasadas para subir o coeficiente.':'');
+return hero(c,pv,'Produtividade de hoje')+`<div class="msg">${m}</div>`+chips()+sec('Atrasadas',d.filter(t=>st(t)=='a'))+sec('Pendentes',d.filter(t=>st(t)=='p'))+sec('Feitas',d.filter(t=>t.done))}
+function vSemana(){const w=ws(),l=fl(S.tasks);let h=hero(coef(weekT(l,w)),coef(weekT(l,add(w,-7))),'Coeficiente da semana')+chips();
+for(let i=0;i<7;i++){const d=add(w,i),a=l.filter(t=>t.due==d);h+=`<h2 class="d" style="${d==td()?'color:var(--m)':''}">${DS[parse(d).getDay()]} ${br(d)}${d==td()?' · hoje':''}</h2>`+(a.length?a.map(taskH).join(''):'<small>Sem tarefas</small>')}return h}
+function vMetas(){return`<h2 class="d">Metas do mês</h2>`+(S.goals.length?S.goals.map(g=>{const w=P[g.who],pc=Math.min(100,g.prog/g.target*100);
+return`<div class="card" style="border-color:${w.c}66"><div class="row"><b>${esc(g.t)}</b><button class="x" data-a="gdel" data-id="${g.id}">×</button></div><small>${w.i} ${w.n}${goalDone(g)?' · +'+CFG.goalXp+' XP':''}</small><div class="bar"><i style="width:0" data-w="${pc}"></i></div><div class="row"><button class="mini" data-a="gp" data-id="${g.id}" data-v="-1">−</button><b class="d">${g.prog}/${g.target}</b><button class="mini" data-a="gp" data-id="${g.id}" data-v="1">+</button></div></div>`}).join(''):'<div class="card mu">Nenhuma meta. Toque em + para criar.</div>')}
+function badges(){const w=weekT(S.tasks,ws()),any=S.tasks.some(t=>t.done);return[['Conquista','Primeira tarefa',any],['Conquista','7 dias seguidos',streak('D')>=7],['Conquista','Dia perfeito',perfect('D')>0],['Conquista','Zero atrasos na semana',w.length>0&&w.every(t=>st(t)!='a')],['Conquista','Meta do mês batida',S.goals.some(goalDone)]]}
+function vPlacar(){const w=ws(),pc=p=>{const x=xp(p),lv=level(x),c=coef(weekT(mine(p),w));return`<div class="card" style="border-color:${P[p].c}88"><div class="row"><b class="d" style="color:${P[p].c}">${P[p].i} ${P[p].n}</b><small>Sequência · ${streak(p)}d</small></div><div class="mu">${lv.name} · ${x} XP${lv.next?' · faltam '+(lv.next-x)+' p/ '+lv.nn:''}</div><div class="bar"><i style="width:0" data-w="${lv.pct}"></i></div><div class="mu">Coeficiente da semana: ${c.v} (${c.lb})</div></div>`};
+const xb=xpR('B',w,add(w,6)),xc=xpR('C',w,add(w,6)),tot=xb+xc||1,dx=xp('D'),dl=level(dx,2),dc=coef(weekT(S.tasks,w));
+return hero(dc,coef(weekT(S.tasks,add(w,-7))),'Coeficiente da dupla · semana')+`<div class="card"><div class="row"><b class="d">Nível da Dupla</b><small>Sequência · ${streak('D')}d</small></div><div class="mu">${dl.name} · ${dx} XP</div><div class="bar"><i style="width:0" data-w="${dl.pct}"></i></div></div>`+pc('B')+pc('C')+
+`<div class="card"><b class="d">Duelo da semana</b><div class="duel"><i style="width:${xb/tot*100}%;background:${P.B.c}"></i><i style="width:${xc/tot*100}%;background:${P.C.c}"></i></div><div class="row mu"><span>Benevides · ${xb} XP</span><span>Clark · ${xc} XP</span></div></div>`+
+`<h2 class="d">Conquistas</h2><div class="bg">${badges().map(b=>`<div class="b ${b[2]?'':'off'}"><span>${b[0]}</span>${b[1]}</div>`).join('')}</div>`+
+`<h2 class="d">Dados</h2><div class="btns"><button class="btn g" data-a="exp">Exportar</button><button class="btn g" data-a="imp">Importar</button></div><button class="btn g" data-a="clr">Limpar dados de exemplo</button>`}
+/* ===== RELATÓRIOS ===== */
+function report(){const rows=[];let title,note,svg='';
+if(UI.rep=='d'){const d=UI.rd,l=dayT(d,S.tasks),c=coef(l),cb=coef(dayT(d,mine('B'))),cc=coef(dayT(d,mine('C')));title='Relatório diário · '+br(d);
+rows.push(['Coeficiente',`${c.v} (${c.lb})`],['Feitas',c.f],['Não feitas',c.p],['Atrasadas',c.o],['XP Benevides',`${xpR('B',d,d)} (coef. ${cb.v})`],['XP Clark',`${xpR('C',d,d)} (coef. ${cc.v})`]);
+note=!c.n?'Dia livre.':c.v>=90?'Dia de elite! Dupla imbatível.':c.v>=70?'Dia forte, bom trabalho!':c.v>=40?'Em ritmo — amanhã dá para ir além.':'Dia difícil. Amanhã é recomeço!'}
+else{const w=ws(UI.rd),days=[0,1,2,3,4,5,6].map(i=>add(w,i)),cs=days.map(d=>coef(dayT(d,S.tasks))),c=coef(weekT(S.tasks,w)),
+past=cs.map((x,i)=>[x,i]).filter(a=>days[a[1]]<=td()&&a[0].n),best=past.length?past.reduce((m,a)=>a[0].v>m[0].v?a:m):null,worst=past.length?past.reduce((m,a)=>a[0].v<m[0].v?a:m):null;
+title='Relatório semanal · '+br(w)+' a '+br(add(w,6));
+rows.push(['Coeficiente',`${c.v} (${c.lb})`],['Taxa de conclusão',(c.n?Math.round(c.f/c.n*100):0)+'%'],['Total de atrasos',c.o],['Melhor dia',best?DS[parse(days[best[1]]).getDay()]+' ('+best[0].v+')':'—'],['Pior dia',worst?DS[parse(days[worst[1]]).getDay()]+' ('+worst[0].v+')':'—'],
+['XP Benevides',xpR('B',w,add(w,6))],['XP Clark',xpR('C',w,add(w,6))],['Metas',S.goals.map(g=>g.t+' '+g.prog+'/'+g.target).join('; ')||'—'],['Streak da dupla',streak('D')+' dias']);
+note='Sugestão: '+(c.o?'atacar as atrasadas no início da semana.':c.n&&c.f/c.n<.7?'reduzir o volume diário e focar no que é prioritário.':'manter o ritmo e subir a régua das metas.');
+svg=`<svg viewBox="0 0 300 116" width="100%"><defs><linearGradient id="g" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#d946ef"/></linearGradient></defs>${cs.map((x,i)=>{const h=days[i]>td()?2:Math.max(2,x.v*.8);return`<rect x="${i*43+6}" y="${92-h}" width="32" height="${h}" rx="6" fill="${days[i]>td()?'#2a1a45':'#8b5cf6'}"/><text x="${i*43+22}" y="108" fill="#9b8cb8" font-size="11" text-anchor="middle">${DS[parse(days[i]).getDay()]}</text><text x="${i*43+22}" y="${88-h}" fill="#f3eefc" font-size="10" text-anchor="middle">${days[i]<=td()&&x.n?x.v:''}</text>`}).join('')}</svg>`}
+const text=`*${title}*\n`+rows.map(r=>`• ${r[0]}: ${r[1]}`).join('\n')+`\n${note}`;return{title,rows,note,svg,text}}
+function vRel(){const r=report(),dly=UI.rep=='d',hist=[];
+for(let i=0;i<(dly?10:6);i++){const d=dly?add(td(),-i):add(ws(),-7*i),c=coef(dly?dayT(d,S.tasks):weekT(S.tasks,d));hist.push(`<div class="rr" data-a="hist" data-v="${d}" style="min-height:44px;align-items:center"><span>${dly?br(d)+' '+DS[parse(d).getDay()]:'Semana '+br(d)}</span><b style="color:${c.c}">${c.v} · ${c.lb}</b></div>`)}
+return`<div class="flt"><button class="chip ${dly?'on':''}" data-a="rep" data-v="d">Diário</button><button class="chip ${dly?'':'on'}" data-a="rep" data-v="w">Semanal</button></div>
+<div class="row"><button class="mini" data-a="nav" data-v="-1">‹</button><b class="d" style="font-size:13px;text-align:center">${r.title}</b><button class="mini" data-a="nav" data-v="1">›</button></div>
+<div class="card" style="margin-top:12px">${r.svg}${r.rows.map(x=>`<div class="rr"><span class="mu">${x[0]}</span><b>${esc(x[1])}</b></div>`).join('')}<div class="msg">${r.note}</div></div>
+<div class="btns"><button class="btn" data-a="copy">Copiar (WhatsApp)</button><button class="btn g" data-a="share">Compartilhar</button></div>
+<h2 class="d">Histórico</h2><div class="card">${hist.join('')}</div>`}
+/* ===== RENDER ===== */
+const IC=p=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const TABS=[['hoje',IC('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>'),'Hoje',vHoje],['semana',IC('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),'Semana',vSemana],['metas',IC('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>'),'Metas',vMetas],['placar',IC('<path d="M5 20V10M12 20V4M19 20v-8"/>'),'Placar',vPlacar],['rel',IC('<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/>'),'Relatórios',vRel]];
+function render(){$('#nav').innerHTML=TABS.map(t=>`<button class="${UI.tab==t[0]?'on':''}" data-a="tab" data-v="${t[0]}"><span>${t[1]}</span>${t[2]}</button>`).join('');
+const m=$('#main'),y=m.scrollTop;m.innerHTML=TABS.find(t=>t[0]==UI.tab)[3]();m.scrollTop=y;
+setTimeout(()=>document.querySelectorAll('.bar i[data-w]').forEach(i=>i.style.width=i.dataset.w+'%'),40)}
+function boom(){const c=['#8b5cf6','#b7a3e6','#c9a6e8','#f3eefc','#6fbf9f'];for(let i=0;i<18;i++){const e=document.createElement('div');e.className='cf';e.style.background=c[i%5];
+e.style.setProperty('--x',(Math.random()*300-150)+'px');e.style.setProperty('--y',(Math.random()*-320-40)+'px');document.body.appendChild(e);setTimeout(()=>e.remove(),1000)}}
+/* ===== FORMULÁRIOS ===== */
+const sheet=h=>{$('#sheet').innerHTML=`<div class="sh">${h}</div>`;$('#sheet').classList.add('on')},closeSheet=()=>$('#sheet').classList.remove('on');
+const seg=(id,opts,cur,multi)=>`<div class="seg ${multi?'multi':''}" id="${id}">${opts.map(o=>`<button type="button" class="chip ${(multi?cur.includes(o[0]):cur==o[0])?'on':''}" data-v="${o[0]}">${o[1]}</button>`).join('')}</div>`;
+function openTask(id){const t=S.tasks.find(x=>x.id==id)||{who:'B',due:td(),pri:'',rec:{type:'none',days:[],day:1}},r=t.rec||{type:'none'};
+sheet(`<h2 class="d" style="margin-top:0">${id?'Editar':'Nova'} tarefa</h2><input id="f_t" placeholder="Título" value="${esc(t.t)}"><textarea id="f_d" rows="2" placeholder="Descrição (opcional)">${esc(t.d)}</textarea>
+<small>Responsável</small>${seg('f_w',['B','C','A'].map(k=>[k,P[k].i+' '+P[k].n]),t.who)}<small>Vencimento</small><input type="date" id="f_due" value="${t.due}">
+<small>Prioridade</small>${seg('f_p',[['','Nenhuma'],['l','Baixa'],['m','Média'],['h','Alta']],t.pri||'')}
+<small>Recorrência</small><select id="f_r" onchange="recUI()">${[['none','Nenhuma'],['daily','Diária'],['weekly','Semanal'],['monthly','Mensal']].map(o=>`<option value="${o[0]}" ${r.type==o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>
+<div id="f_wk">${seg('f_days',DS.map((d,i)=>[i,d]),(r.days||[]).map(Number),1)}</div><div id="f_mo"><small>Dia do mês</small><input type="number" id="f_md" min="1" max="31" value="${r.day||1}"></div>
+<button class="btn" data-a="save" data-id="${id||''}">Salvar</button><button class="btn g" data-a="close">Cancelar</button>`);recUI()}
+function recUI(){const v=$('#f_r').value;$('#f_wk').style.display=v=='weekly'?'block':'none';$('#f_mo').style.display=v=='monthly'?'block':'none'}
+function saveTask(id){const t=$('#f_t').value.trim();if(!t)return $('#f_t').focus();const on=s=>[...$(s).querySelectorAll('.on')].map(b=>b.dataset.v),rt=$('#f_r').value,due=$('#f_due').value||td();
+const rec={type:rt,days:on('#f_days').map(Number),day:+$('#f_md').value||1};if(rt=='weekly'&&!rec.days.length)rec.days=[parse(due).getDay()];
+const o={t,d:$('#f_d').value.trim(),who:on('#f_w')[0]||'B',pri:on('#f_p')[0]||'',due,rec},x=S.tasks.find(k=>k.id==id);
+if(x){Object.assign(x,o);if(rt!='none'&&!x.sid)x.sid=uid()}else S.tasks.push({id:uid(),...o,done:null,sid:rt!='none'?uid():null});
+ensure();save();closeSheet();render()}
+function openGoal(){sheet(`<h2 class="d" style="margin-top:0">Nova meta</h2><input id="g_t" placeholder="Objetivo (ex.: Fechar 10 vendas)"><small>Responsável</small>${seg('g_w',['B','C','A'].map(k=>[k,P[k].i+' '+P[k].n]),'A')}<small>Valor alvo</small><input type="number" id="g_v" min="1" value="10"><button class="btn" data-a="gsave">Salvar meta</button><button class="btn g" data-a="close">Cancelar</button>`)}
+/* ===== AÇÕES ===== */
+const copy=async t=>{try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}alert('Relatório copiado!')};
+const A={tab:(b)=>{UI.tab=b.dataset.v;const m=$('#main');m.scrollTop=0;m.classList.remove('in');void m.offsetWidth;m.classList.add('in');render()},
+flt:b=>{UI.f=b.dataset.v;render()},tg:b=>toggle(b.dataset.id),ed:b=>openTask(b.dataset.id),
+del:b=>{const t=S.tasks.find(x=>x.id==b.dataset.id);if(!confirm(t.sid?'Excluir e encerrar a recorrência?':'Excluir tarefa?'))return;
+S.tasks=S.tasks.filter(x=>x.id!=t.id);if(t.sid)S.tasks.forEach(x=>{if(x.sid==t.sid)x.rec={type:'none'}});save();render()},
+fab:()=>UI.tab=='metas'?openGoal():openTask(),close:closeSheet,save:b=>saveTask(b.dataset.id),
+gsave:()=>{const t=$('#g_t').value.trim();if(!t)return;S.goals.push({id:uid(),t,who:$('#g_w .on').dataset.v,target:Math.max(1,+$('#g_v').value||1),prog:0});save();closeSheet();render()},
+gp:b=>{const g=S.goals.find(x=>x.id==b.dataset.id),was=goalDone(g);g.prog=Math.max(0,Math.min(g.target,g.prog+ +b.dataset.v));if(!was&&goalDone(g))boom();save();render()},
+gdel:b=>{if(confirm('Excluir meta?')){S.goals=S.goals.filter(x=>x.id!=b.dataset.id);save();render()}},
+rep:b=>{UI.rep=b.dataset.v;render()},nav:b=>{UI.rd=add(UI.rd,+b.dataset.v*(UI.rep=='d'?1:7));render()},hist:b=>{UI.rd=b.dataset.v;render()},
+copy:()=>copy(report().text),share:()=>navigator.share?navigator.share({text:report().text}).catch(()=>{}):copy(report().text),
+exp:()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='duoquest-backup-'+td()+'.json';a.click()},
+imp:()=>$('#imp').click(),
+clr:()=>{if(confirm('Remover tarefas e metas de exemplo?')){S.tasks=S.tasks.filter(t=>!t.seed);S.goals=S.goals.filter(g=>!g.seed);save();render()}}};
+document.addEventListener('click',e=>{if(e.target.id=='sheet')return closeSheet();
+const c=e.target.closest('.seg .chip');if(c){const s=c.parentNode;if(s.classList.contains('multi'))c.classList.toggle('on');else{s.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')}return}
+const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])A[b.dataset.a](b)});
+$('#imp').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.tasks))throw 0;S=d;S.goals=S.goals||[];save();render();alert('Backup importado!')}catch(x){alert('Arquivo inválido.')}};r.readAsText(f);e.target.value=''});
+/* ===== PWA: ícone + manifest gerados no código ===== */
+(function(){const c=document.createElement('canvas');c.width=c.height=180;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,180,180);g.addColorStop(0,'#8b5cf6');g.addColorStop(1,'#0a0612');
+x.fillStyle=g;x.fillRect(0,0,180,180);x.fillStyle='#f3eefc';x.font='800 78px sans-serif';x.textAlign='center';x.textBaseline='middle';x.shadowColor='#d946ef';x.shadowBlur=24;x.fillText('DQ',90,94);
+const u=c.toDataURL('image/png'),l=document.createElement('link');l.rel='apple-touch-icon';l.href=u;document.head.appendChild(l);
+const m=document.createElement('link');m.rel='manifest';m.href=URL.createObjectURL(new Blob([JSON.stringify({name:'DuoQuest',short_name:'DuoQuest',display:'standalone',start_url:location.href,background_color:'#0a0612',theme_color:'#0a0612',icons:[{src:u,sizes:'180x180',type:'image/png'}]})],{type:'application/json'}));document.head.appendChild(m)})();
+/* ===== INÍCIO ===== */
+ensure();save();render();$('#main').classList.add('in');
+setTimeout(()=>{$('#sp').style.opacity=0;setTimeout(()=>$('#sp').remove(),500)},900);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){ensure();save();render()}});
+</script></body></html>
